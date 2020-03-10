@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class Board implements  ActionListener {
 
@@ -18,7 +19,8 @@ public class Board implements  ActionListener {
     Square Lilypads[]=new Square[13];
     Square Frogs[]=new Square[6];
     private int Lilylength=7;
-   // private boolean jumpover=false;
+    ArrayList<Square>frogs=new ArrayList<Square>();
+
     public Board() {
 
         JFrame frame = new JFrame();//CREATE A Jframe
@@ -87,6 +89,16 @@ public class Board implements  ActionListener {
         Frogs[3]=squares[green4];
         Frogs[4]=squares[green5];
         Frogs[5]=squares[22];
+
+        frogs.add(squares[22]);
+        frogs.add(squares[green1]);
+        frogs.add(squares[green2]);
+        frogs.add(squares[green3]);
+        frogs.add(squares[green4]);
+        frogs.add(squares[green5]);
+
+
+
 //0,1,4,10,14,16,18
         Lilypads[0]=squares[0];
         Lilypads[1]=squares[2];
@@ -115,11 +127,6 @@ public class Board implements  ActionListener {
 
        boolean pad=false;
        boolean Green=false;
-
-
-
-
-
          for (int i = 0; i <Lilylength; i++)
          {
              if (e.getSource() == Lilypads[i].button)
@@ -129,22 +136,23 @@ public class Board implements  ActionListener {
              }
           }
 
-          for(int g=0;g<Frogs.length-1;g++)
+          for(int g=1;g<frogs.size();g++)
           {
 
-              if(e.getSource()==Frogs[g].button)
+              if(e.getSource()==frogs.get(g).button)
               {
                  Green=true;
+
               }
 
           }
 
-
+     System.out.println(Green);
 
      //System.out.println(Green );
 
         //    when the redfrog is selected
-        if (e.getSource() == Frogs[5].button && redselected == false) {
+        if (e.getSource() == frogs.get(0).button && redselected == false) {
 
             if(greenselected==true)
             {
@@ -157,7 +165,7 @@ public class Board implements  ActionListener {
 
             //i = new ImageIcon("RedFrog2.png");
             //redsquare.button.setIcon(i);
-            setButtonIcon("RedFrog2",Frogs[5].button);
+            setButtonIcon("RedFrog2",frogs.get(0).button);
             redselected = true;
 
 
@@ -168,7 +176,7 @@ public class Board implements  ActionListener {
             {
                 //i = new ImageIcon("RedFrog.png");
                 //redsquare.button.setIcon(i);
-                setButtonIcon("RedFrog",Frogs[5].button);
+                setButtonIcon("RedFrog",frogs.get(0).button);
                 redselected=false;
             }
              greenbutton=(JButton)e.getSource();
@@ -195,56 +203,55 @@ public class Board implements  ActionListener {
 
 
         else if ( redselected&&pad)//(e.getSource()==squares[0].button||e.getSource()==squares[2].button||e.getSource()==squares[4].button||e.getSource()==squares[10].button||e.getSource()==squares[14].button||e.getSource()==squares[16].button||e.getSource()==squares[18].button))
-        {
-            //check the button that you pressed ,store in the button
-            JButton button = (JButton) e.getSource();
-            while (Lilypads[x].button != button)
             {
-                x++;
-            }
+                //check the button that you pressed ,store in the button
+                JButton button = (JButton) e.getSource();
+                while (Lilypads[x].button != button) {
+                    x++;
+                }
+
+                    int removex = (Lilypads[x].getX() + frogs.get(0).getX()) / 2;
+                    int removey = (Lilypads[x].getY() + frogs.get(0).getY()) / 2;
 
 
-
-
-
-                for(int a=0;a<Frogs.length-1;a++)
-                {
-
-                    int removex=(Lilypads[x].getX()+Frogs[5].getX())/2;
-                    int removey=(Lilypads[x].getY()+Frogs[5].getY())/2 ;
-
-                    if(Frogs[a].getX()==removex&&Frogs[a].getY()==removey )
+                    for(int n =1;n<frogs.size();n++)
                     {
-                        // System.out.println("GG");
-                        moveTo2(5, x);
-                        setButtonIcon("LilyPad",Frogs[a].button);
-                        Frogs[a].setImage("Lilypad");
-                        Lilypads[Lilylength]=Frogs[a];
-                        Lilylength++;
+                        if(frogs.get(n).getX()==removex&&frogs.get(n).getY()==removey)
 
-                        redselected = false;
-                        a=Frogs.length;
+                        {
+
+                            frogs.get(n).setImage("LilyPad");
+                            setButtonIcon("LilyPad",frogs.get(n).button);
+                            Lilypads[Lilylength]=frogs.get(n);
+                            frogs.remove(n);
+                            Lilylength++;
+                            moveTo2(0, x);
+                            redselected = false;
+                            n=frogs.size();
+                        }
 
                     }
 
 
-                }
-
-                System.out.println(Frogs[5].getY()+"\t"+Frogs[5].getX());
 
 
+                  //  System.out.println(Frogs[5].getY() + "\t" + Frogs[5].getX());
 
-        }
+
+
+            }
 
       else  if(greenselected&&pad)//(e.getSource()==squares[0].button||e.getSource()==squares[2].button||e.getSource()==squares[4].button||e.getSource()==squares[10].button||e.getSource()==squares[14].button||e.getSource()==squares[16].button||e.getSource()==squares[18].button))
         {
+
+             z=1;
 
             JButton button=(JButton)e.getSource();
             while (Lilypads[x].button!= button) {
                 x++;//the buttopn that yoy click
             }
 
-            while(Frogs[z].button!=greenbutton)
+            while(frogs.get(z).button!=greenbutton)
             {
 
                 z++;//greenbutton
@@ -265,17 +272,17 @@ public class Board implements  ActionListener {
     private  void moveTo2(int index, int otherindex)
     {
 
-        ImageIcon i = new ImageIcon(Frogs[index].getImage() + ".png");
+        ImageIcon i = new ImageIcon(frogs.get(index).getImage() + ".png");
         Lilypads[otherindex].button.setIcon(i);
         i = new ImageIcon(Lilypads[otherindex].getImage() + ".png");
-        Frogs[index].button.setIcon(i);
+        frogs.get(index).button.setIcon(i);
 
-        Square temp = Frogs[index];
-        Frogs[index] = Lilypads[otherindex];
+        Square temp = frogs.get(index);
+        frogs.set(index,Lilypads[otherindex]);
         Lilypads[otherindex] = temp;
 
-        String tempt = Frogs[index].getImage();
-        Frogs[index].setImage(Lilypads[otherindex].getImage());
+        String tempt = frogs.get(index).getImage();
+        frogs.get(index).setImage(Lilypads[otherindex].getImage());
         Lilypads[otherindex].setImage(tempt);
 
     }
