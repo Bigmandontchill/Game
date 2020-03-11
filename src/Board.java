@@ -22,6 +22,7 @@ public class Board implements  ActionListener {
         JPanel panel = new JPanel();//create a panel
         GridLayout layout = new GridLayout(5, 5);
         panel.setLayout(layout);
+
         Square square0 = new Square(1, 1, "LilyPad", this);
         Square square1 = new Square(1, 2, "Water", this);
         Square square2 = new Square(1, 3, "LilyPad", this);
@@ -105,18 +106,21 @@ public class Board implements  ActionListener {
         boolean pad = false;
         boolean Green = false;
 
-        for (int i = 0; i < Lilylength; i++) {
+        for (int i = 0; i < Lilylength; i++)
+        {
             if (e.getSource() == Lilypads[i].button) {
                 pad = true;
             }
         }
-        for (int g = 1; g < frogs.size(); g++) {
+        for (int g = 1; g < frogs.size(); g++)
+        {
             if (e.getSource() == frogs.get(g).button) {
                 Green = true;
 
             }
         }
-        if (e.getSource() == frogs.get(0).button && redselected == false) {
+        if (e.getSource() == frogs.get(0).button && redselected == false)
+        {
 
             if (greenselected == true) {
                 setButtonIcon("GreenFrog", greenbutton);
@@ -124,9 +128,10 @@ public class Board implements  ActionListener {
             }
             setButtonIcon("RedFrog2", frogs.get(0).button);
             redselected = true;
-        } else if (Green && greenselected == false) {
+        }
+        else if (Green && greenselected == false) {
             if (redselected == true) {
-                setButtonIcon("RedFrog", frogs.get(0).button);
+                setButtonIcon("RedFrog", frogs.get(0).getButton());
                 redselected = false;
             }
             greenbutton = (JButton) e.getSource();
@@ -141,7 +146,8 @@ public class Board implements  ActionListener {
             greenbutton = (JButton) e.getSource();
             setButtonIcon("GreenFrog2", greenbutton);
             greenselected = true;
-        } else if (redselected && pad)
+        }
+        else if (redselected && pad)
         {
             //check the button that you pressed ,store in the button
             JButton button = (JButton) e.getSource();
@@ -188,7 +194,6 @@ public class Board implements  ActionListener {
 
         }
     }
-
     private  void moveTo2(int index, int otherindex)
     {
         ImageIcon i = new ImageIcon(frogs.get(index).getImage() + ".png");
