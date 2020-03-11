@@ -110,14 +110,12 @@ public class Board implements  ActionListener {
                 pad = true;
             }
         }
-
         for (int g = 1; g < frogs.size(); g++) {
             if (e.getSource() == frogs.get(g).button) {
                 Green = true;
 
             }
         }
-
         if (e.getSource() == frogs.get(0).button && redselected == false) {
 
             if (greenselected == true) {
@@ -147,29 +145,15 @@ public class Board implements  ActionListener {
         {
             //check the button that you pressed ,store in the button
             JButton button = (JButton) e.getSource();
-            while (Lilypads[x].button != button) {
+            while (Lilypads[x].button != button)
+            {
                 x++;
             }
-
             double removex =(double) (Lilypads[x].getX() + frogs.get(0).getX()) / 2;
             double removey = (double) (Lilypads[x].getY() + frogs.get(0).getY()) / 2;
-
-
-            for (int n = 1; n < frogs.size(); n++) {
-                if (frogs.get(n).getX() == removex && frogs.get(n).getY() == removey) {
-
-                    frogs.get(n).setImage("LilyPad");
-                    setButtonIcon("LilyPad", frogs.get(n).button);
-                    Lilypads[Lilylength] = frogs.get(n);
-                    frogs.remove(n);
-                    Lilylength++;
-                    moveTo2(0, x);
-                    redselected = false;
-                    n = frogs.size();
-                }
-
-            }
-        } else if (greenselected && pad)
+             deleteFrog(removex,removey,0,x);
+        }
+        else if (greenselected && pad)
         {
             int u = 1;
             x=0;
@@ -187,31 +171,21 @@ public class Board implements  ActionListener {
 
             double removex = (double) (Lilypads[x].getX() + frogs.get(u).getX())/2;
             double  removey = (double)(Lilypads[x].getY() + frogs.get(u).getY())/2;
-
-            for(int t=1;t<frogs.size();t++)
-            {
-
-                if(frogs.get(t).getX()==removex&&frogs.get(t).getY()==removey)
-                {
-
-                    moveTo2(u, x);
-                    frogs.get(t).setImage("LilyPad");
-                    setButtonIcon("LilyPad", frogs.get(t).button);
-                    Lilypads[Lilylength]=frogs.get(t);
-                    frogs.remove(t);
-                    Lilylength++;
-                    greenselected=false;
-                    t=frogs.size();
-                }
-            }
-
-
+            deleteFrog2(removex,removey,u,x);
         }
 
         if(frogs.size()==1)
         {
 
-            setButtonIcon("win",frogs.get(0).button);
+
+           setButtonIcon("win",frogs.get(0).button);
+            for(int a=0;a<Lilylength;a++)
+            {
+                   setButtonIcon("win",Lilypads[a].button);
+
+            }
+
+
         }
     }
 
@@ -235,4 +209,37 @@ public class Board implements  ActionListener {
        button.setIcon(i);
     }
 
+    private void  deleteFrog(double removex,double removey,int index,int otherindex)
+    {
+        for (int n = 1; n < frogs.size(); n++) {
+            if (frogs.get(n).getX() == removex && frogs.get(n).getY() == removey) {
+                moveTo2(index, otherindex);
+                frogs.get(n).setImage("LilyPad");
+                setButtonIcon("LilyPad", frogs.get(n).button);
+                Lilypads[Lilylength] = frogs.get(n);
+                frogs.remove(n);
+                Lilylength++;
+                redselected = false;
+                n = frogs.size();
+            }
+
+        }
+    }
+    private void  deleteFrog2(double removex,double removey,int index,int otherindex)
+    {
+        for(int t=1;t<frogs.size();t++)
+        {
+            if(frogs.get(t).getX()==removex&&frogs.get(t).getY()==removey)
+            {
+                moveTo2(index, otherindex);
+                frogs.get(t).setImage("LilyPad");
+                setButtonIcon("LilyPad", frogs.get(t).button);
+                Lilypads[Lilylength]=frogs.get(t);
+                frogs.remove(t);
+                Lilylength++;
+                greenselected=false;
+                t=frogs.size();
+            }
+        }
+    }
 }
