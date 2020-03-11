@@ -13,6 +13,7 @@ public class Board implements  ActionListener {
     private Square Lilypads[]=new Square[13];
     private int Lilylength=7;
     private ArrayList<Square>frogs=new ArrayList<Square>();
+   // JLabel l=new JLabel();
 
     public Board()
     {
@@ -205,6 +206,12 @@ public class Board implements  ActionListener {
             }
 
 
+        }
+
+        if(frogs.size()==1)
+        {
+
+            setButtonIcon("win",frogs.get(0).button);
         }
     }
 
