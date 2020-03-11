@@ -6,23 +6,28 @@ import java.util.ArrayList;
 
 public class Board implements  ActionListener {
 
-    private Square squares[] = new Square[25];
+    //private Square squares[] = new Square[25];
     private  boolean redselected = false;
     private  boolean greenselected = false;
     private JButton greenbutton=new JButton();
     private Square Lilypads[]=new Square[13];
-    private int Lilylength=7;
+    private int Lilylength=1;
     private ArrayList<Square>frogs=new ArrayList<Square>();
-   // JLabel l=new JLabel();
 
-    public Board()
+
+    public Board(int level )
     {
 
+        int findredfrog=0;
+        int findgreenfrogs;
+        Square squares[] = new Square[25];
         JFrame frame = new JFrame();//CREATE A Jframe
         JPanel panel = new JPanel();//create a panel
         GridLayout layout = new GridLayout(5, 5);
         panel.setLayout(layout);
 
+        if(level==1)
+        {
         Square square0 = new Square(1, 1, "LilyPad", this);
         Square square1 = new Square(1, 2, "Water", this);
         Square square2 = new Square(1, 3, "LilyPad", this);
@@ -73,24 +78,92 @@ public class Board implements  ActionListener {
         squares[22] = square22;
         squares[23] = square23;
         squares[24] = square24;
+        }
+        else
+        {
+            Square square0 = new Square(1, 1, "RedFrog", this);
+            Square square1 = new Square(1, 2, "Water", this);
+            Square square2 = new Square(1, 3, "LilyPad", this);
+            Square square3 = new Square(1, 4, "Water", this);
+            Square square4 = new Square(1, 5, "LilyPad", this);
+            Square square5 = new Square(2, 1, "Water", this);
+            Square square6 = new Square(2, 2, "GreenFrog", this);
+            Square square7 = new Square(2, 3, "Water", this);
+            Square square8 = new Square(2, 4, "LilyPad", this);
+            Square square9 = new Square(2, 5, "Water", this);
+            Square square10 = new Square(3, 1, "LilyPad", this);
+            Square square11 = new Square(3, 2, "Water", this);
+            Square square12 = new Square(3, 3, "LilyPad", this);
+            Square square13 = new Square(3, 4, "Water", this);
+            Square square14 = new Square(3, 5, "LilyPad", this);
+            Square square15 = new Square(4, 1, "Water", this);
+            Square square16 = new Square(4, 2, "LilyPad", this);
+            Square square17 = new Square(4, 3, "Water", this);
+            Square square18 = new Square(4, 4, "GreenFrog", this);
+            Square square19 = new Square(4, 5, "Water", this);
+            Square square20 = new Square(5, 1, "LilyPad", this);
+            Square square21 = new Square(5, 2, "Water", this);
+            Square square22 = new Square(5, 3, "LilyPad", this);
+            Square square23 = new Square(5, 4, "Water", this);
+            Square square24 = new Square(5, 5, "LilyPad", this);
+            squares[0] = square0;
+            squares[1] = square1;
+            squares[2] = square2;
+            squares[3] = square3;
+            squares[4] = square4;
+            squares[5] = square5;
+            squares[6] = square6;
+            squares[7] = square7;
+            squares[8] = square8;
+            squares[9] = square9;
+            squares[10] = square10;
+            squares[11] = square11;
+            squares[12] = square12;
+            squares[13] = square13;
+            squares[14] = square14;
+            squares[15] = square15;
+            squares[16] = square16;
+            squares[17] = square17;
+            squares[18] = square18;
+            squares[19] = square19;
+            squares[20] = square20;
+            squares[21] = square21;
+            squares[22] = square22;
+            squares[23] = square23;
+            squares[24] = square24;
+        }
        for (int x=0;x<25;x++)
        {
          panel.add(squares[x].getButton());
        }
-        frogs.add(squares[22]);
-        frogs.add(squares[6]);
-        frogs.add(squares[8]);
-        frogs.add(squares[12]);
-        frogs.add(squares[20]);
-        frogs.add(squares[24]);
-        //0,1,4,10,14,16,18
-        Lilypads[0]=squares[0];
-        Lilypads[1]=squares[2];
-        Lilypads[2]=squares[4];
-        Lilypads[3]=squares[10];
-        Lilypads[4]=squares[14];
-        Lilypads[5]=squares[16];
-        Lilypads[6]=squares[18];
+
+       while(squares[findredfrog].getImage()!="RedFrog")
+       {
+           findredfrog++;
+       }
+        frogs.add(squares[findredfrog]);
+       System.out.println(findredfrog);
+
+       for(findgreenfrogs=0;findgreenfrogs<25;findgreenfrogs++)
+       {
+          if(squares[findgreenfrogs].getImage()=="GreenFrog")
+          {
+             frogs.add( squares[findgreenfrogs]);
+          }
+       }
+
+
+        for(int find=0;find<25;find++)
+        {
+            if(squares[find].getImage()=="LilyPad")
+            {
+                Lilypads[Lilylength-1]=squares[find];
+                Lilylength++;
+            }
+
+        }
+          Lilylength--;
+
         frame.setContentPane(panel);// add panel to the frame
         frame.setTitle("Time");
         frame.setSize(800, 800);
