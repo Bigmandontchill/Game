@@ -4,22 +4,38 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * This class create the  game board and perform logic of the game.
+ * @author  Tianran Wang
+ */
 public class Board implements ActionListener {
-    private boolean redselected = false;//use to check when redfrog is selected
-    private boolean greenselected = false;//use to check when greenfrog is selected
-    private JButton greenbutton = new JButton();//use to selected button for greenfrogs
-    private Square Lilypads[] = new Square[13];//use to store Lilypads
-    private int Lilylength = 0;//length of Lilypads array
-    private ArrayList<Square> frogs = new ArrayList<Square>(); //use to store frogs
-    private boolean menu = true;//to swich to gamemode
+    /**use to check when redfrog is selected*/
+    private boolean redselected = false;
+    /**use to check when greenfrog is selected*/
+    private boolean greenselected = false;
+    /**use to store  selected button for greenfrog*/
+    private JButton greenbutton = new JButton();
+    /**use to store Lilypads*/
+    private Square Lilypads[] = new Square[13];
+    /**length of Lilypads array*/
+    private int Lilylength = 0;
+    /**use to store frogs*/
+    private ArrayList<Square> frogs = new ArrayList<Square>();
+    /**use to switch to game mode */
+    private boolean menu = true;
+    /**use to  select difficulties level */
     private JButton button1 = new JButton("MEDIUM");
+    /**use to  select difficulties level */
     private JButton button2 = new JButton("EASY");
+    /**use to  select difficulties level */
     private JButton button3 = new JButton("HARD");
     private JPanel panel;
     private JFrame frame;
 
+    /**
+     * It create  a window for the game
+     */
     public Board() {
-
         frame = new JFrame();//CREATE A Jframe
         panel = new JPanel();//create a panel
         frame.setContentPane(panel);// add panel to the frame
@@ -39,15 +55,12 @@ public class Board implements ActionListener {
         button3.addActionListener(this);
     }
 
-    //will do it when you click  any  button
+    /**
+     * it execute if any button is clciked
+     * @param e store the button that I pressed
+     */
     public void actionPerformed(ActionEvent e) {
-        int x = 0;
-        int z = 0;
-        boolean pad = false;
-        boolean Green = false;
-// to show the menu ,switch to gamemode if button1 or button2,or button3 is clciked
-        if (menu == true)
-        {
+        if (menu == true) {
 
             if (e.getSource() == button1) {
                 menu = false;
@@ -64,114 +77,57 @@ public class Board implements ActionListener {
             }
 
         }
-         //start of gamemode
+        //start of gamemode
         if (menu == false) {
-            for (int i = 0; i < Lilylength; i++) {
-                if (e.getSource() == Lilypads[i].getButton()) {
-                    pad = true;//pad is true if any lilypad  button is clicked
-                }
-            }
-            for (int g = 1; g < frogs.size(); g++) {
-                if (e.getSource() == frogs.get(g).getButton()) {
-                    Green = true;//Green is true if any greenfrog button is clicked
 
-                }
-            }
-            if (e.getSource() == frogs.get(0).getButton() && redselected == false) {
-                //deselect the greenfrog button
-                if (greenselected == true) {
-                    setButtonIcon("GreenFrog", greenbutton);
-                    greenselected = false;
-                }
-                //change the icon if redfrog is clciked
-                setButtonIcon("RedFrog2", frogs.get(0).getButton());
-                redselected = true;
-            }
-            else if (Green && greenselected == false) {
-                //deselect the redfrog button
-                if (redselected == true) {
-                    setButtonIcon("RedFrog", frogs.get(0).getButton());
-                    redselected = false;
-                }
-                //change the icon if greenfrog is clciked
-                greenbutton = (JButton) e.getSource();
-                setButtonIcon("GreenFrog2", greenbutton);
-                greenselected = true;
-            }
-            //to switch higlighted greenfrog
-            if (greenselected && e.getSource() != greenbutton && Green) {
-                setButtonIcon("GreenFrog", greenbutton);
-                greenbutton = (JButton) e.getSource();
-                setButtonIcon("GreenFrog2", greenbutton);
-            }
-            else if (redselected && pad) {
-                //check the button that you pressed ,store in the button
-                JButton button = (JButton) e.getSource();
-                while (Lilypads[x].getButton() != button) {
-                    x++;  // loop stop when if any button in array  Lilypads match button
-                }
-                double removex = (double) (Lilypads[x].getX() + frogs.get(0).getX()) / 2;//calculate move for x
-                double removey = (double) (Lilypads[x].getY() + frogs.get(0).getY()) / 2;//calculate for y
-                deleteFrog(removex, removey, 0, x);
-            }
-            else if (greenselected && pad) {
-                int u = 1;
-                x = 0;
-                JButton button = (JButton) e.getSource();
-                while (Lilypads[x].getButton() != button) {
-                    x++;//the buttopn that yoy click
-                }
-
-                while (frogs.get(u).getButton() != greenbutton) {
-
-                    u++;
-                }
-
-                double removex = (double) (Lilypads[x].getX() + frogs.get(u).getX()) / 2;
-                double removey = (double) (Lilypads[x].getY() + frogs.get(u).getY()) / 2;
-                deleteFrog(removex, removey, u, x);
-            }
-
-            if (frogs.size() == 1) {
-
-
-                setButtonIcon("win", frogs.get(0).getButton());
-                for (int a = 0; a < Lilylength; a++) {
-                    setButtonIcon("win", Lilypads[a].getButton());
-
-                }
-
-
-            }
+          Gamelogic(e);
+          displaywin();
         }
     }
 
-    private void moveTo(int index, int otherindex) {
+    /**
+     * This move a frog on to  the lilypad
+     * @param index     is position of the frog in the list frogs
+     * @param Lilyindex is  position of the lilypad in the array Lilypads
+     */
+
+    private void moveTo(int index, int Lilyindex) {
         //switch the look
         ImageIcon i = new ImageIcon(frogs.get(index).getImage() + ".png");
-        Lilypads[otherindex].getButton().setIcon(i);
-        i = new ImageIcon(Lilypads[otherindex].getImage() + ".png");
+        Lilypads[Lilyindex].getButton().setIcon(i);
+        i = new ImageIcon(Lilypads[Lilyindex].getImage() + ".png");
         frogs.get(index).getButton().setIcon(i);
-       //switch the square between list frogs and Square LilyPads
+        //switch the square between list frogs and Square LilyPads
         Square temp = frogs.get(index);
-        frogs.set(index, Lilypads[otherindex]);
-        Lilypads[otherindex] = temp;
-         //switch the image
+        frogs.set(index, Lilypads[Lilyindex]);
+        Lilypads[Lilyindex] = temp;
+        //switch the image
         String tempt = frogs.get(index).getImage();
-        frogs.get(index).setImage(Lilypads[otherindex].getImage());
-        Lilypads[otherindex].setImage(tempt);
+        frogs.get(index).setImage(Lilypads[Lilyindex].getImage());
+        Lilypads[Lilyindex].setImage(tempt);
 
     }
-    //set the icon of the buttpn
+    /**
+     * set the icon of the button
+     * @param image  new icon for the button
+     * @param button
+     */
     private void setButtonIcon(String image, JButton button) {
         ImageIcon i = new ImageIcon(image + ".png");
         button.setIcon(i);
     }
 
-    private void deleteFrog(double removex, double removey, int index, int otherindex) {
+    /**
+     * remove  frogs  that have been jumped over if user perform a legal move
+     * @param removex   use to check legal move
+     * @param removey   use to check legal move
+     * @param index     is position of the frog in the list frogs
+     * @param Lilyindex is  position of the lilypad in the array Lilypads
+     */
+    private void deleteFrog(double removex, double removey, int index, int Lilyindex) {
         for (int n = 1; n < frogs.size(); n++) {
             if (frogs.get(n).getX() == removex && frogs.get(n).getY() == removey) {
-                moveTo(index, otherindex);
+                moveTo(index, Lilyindex);
                 //remove greenfrog from the list ,add the greenfrog to array LilyPads
                 frogs.get(n).setImage("LilyPad");
                 setButtonIcon("LilyPad", frogs.get(n).getButton());
@@ -180,13 +136,18 @@ public class Board implements ActionListener {
                 Lilylength++;
                 //deselect the redfrog and greenfrog
                 redselected = false;
-                greenselected=false;
+                greenselected = false;
                 n = frogs.size();
             }
 
         }
     }
 
+
+    /**
+     * It load level
+     * @param level the level that you want to load (the game has 3 level )
+     */
     private void loadlevel(int level) {
         panel.remove(button1);
         panel.remove(button2);
@@ -351,7 +312,7 @@ public class Board implements ActionListener {
             squares[23] = square23;
             squares[24] = square24;
         }
-       //Gridlayout for the panel
+        //Gridlayout for the panel
         GridLayout layout = new GridLayout(5, 5);
         panel.setLayout(layout);
 
@@ -379,13 +340,116 @@ public class Board implements ActionListener {
             }
         }
 
-         //add lilypads to the  array LilyPad
+        //add lilypads to the  array LilyPad
         for (int find = 0; find < 25; find++) {
             if (squares[find].getImage() == "LilyPad") {
                 squares[find].getButton().addActionListener(this);
                 Lilypads[Lilylength] = squares[find];
                 Lilylength++;
             }
+        }
+    }
+
+    /**
+     * It return true if any green frog is selected
+     */
+    private boolean Greenfrogisclciked(ActionEvent e) {
+        boolean Green = false;
+        for (int g = 1; g < frogs.size(); g++) {
+            if (e.getSource() == frogs.get(g).getButton()) {
+                Green = true;//Green is true if any greenfrog button is clicked
+
+            }
+        }
+        return Green;
+    }
+
+
+    /**
+     * It  return true if  any lilypad is clciked
+     */
+    private boolean LilyPadisclciked(ActionEvent e) {
+        boolean pad = false;
+        for (int i = 0; i < Lilylength; i++) {
+            if (e.getSource() == Lilypads[i].getButton()) {
+                pad = true;//pad is true if any lilypad  button is clicked
+            }
+        }
+        return pad;
+    }
+
+    /**
+     * Dispaly a win message
+     */
+    private void displaywin() {
+
+        if (frogs.size() == 1) {
+            setButtonIcon("win", frogs.get(0).getButton());
+
+            for (int x = 0; x < Lilylength; x++) {
+
+                setButtonIcon("win", Lilypads[x].getButton());
+            }
+        }
+
+    }
+
+
+    /**
+     * This method perform the logic of the game
+     */
+    private void Gamelogic(ActionEvent e) {
+        int x = 0;
+        if (e.getSource() == frogs.get(0).getButton() && redselected == false) {
+            //deselect the greenfrog button
+            if (greenselected == true) {
+                setButtonIcon("GreenFrog", greenbutton);
+                greenselected = false;
+            }
+            //change the icon if redfrog is clciked
+            setButtonIcon("RedFrog2", frogs.get(0).getButton());
+            redselected = true;
+        } else if (Greenfrogisclciked(e) && greenselected == false) {
+            //deselect the redfrog button
+            if (redselected == true) {
+                setButtonIcon("RedFrog", frogs.get(0).getButton());
+                redselected = false;
+            }
+            //change the icon if greenfrog is clciked
+            greenbutton = (JButton) e.getSource();
+            setButtonIcon("GreenFrog2", greenbutton);
+            greenselected = true;
+        }
+        //to switch higlighted greenfrog
+        if (greenselected && e.getSource() != greenbutton && Greenfrogisclciked(e)) {
+            setButtonIcon("GreenFrog", greenbutton);
+            greenbutton = (JButton) e.getSource();
+            setButtonIcon("GreenFrog2", greenbutton);
+        } else if (redselected && LilyPadisclciked(e)) {
+            //check the button that you pressed ,store in the button
+            JButton button = (JButton) e.getSource();
+            while (Lilypads[x].getButton() != button) {
+                x++;  // loop stop when if any button in array  Lilypads match button
+            }
+            double removex = (double) (Lilypads[x].getX() + frogs.get(0).getX()) / 2;//calculate move for x
+            double removey = (double) (Lilypads[x].getY() + frogs.get(0).getY()) / 2;//calculate for y
+            deleteFrog(removex, removey, 0, x);
+        } else if (greenselected && LilyPadisclciked(e)) {
+            int u = 1;
+            x = 0;
+            JButton button = (JButton) e.getSource();
+            while (Lilypads[x].getButton() != button) {
+                x++;//the buttopn that yoy click
+            }
+
+            while (frogs.get(u).getButton() != greenbutton) {
+
+                u++;
+            }
+
+            double removex = (double) (Lilypads[x].getX() + frogs.get(u).getX()) / 2;
+            double removey = (double) (Lilypads[x].getY() + frogs.get(u).getY()) / 2;
+            deleteFrog(removex, removey, u, x);
 
         }
 
